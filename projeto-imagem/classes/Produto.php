@@ -24,8 +24,7 @@ class Produto{
         $result = $stmt->execute();
 
         if ($result) {
-            $id_produto = $this->pdo->lastInsertId();
-            echo "$id_produto"; // lastInsertId() busca o último id inserido na tabela
+            $id_produto = $this->pdo->lastInsertId(); // lastInsertId() busca o último id inserido na tabela
         //inserir imagens na tabela com o id do produto inserido anteriormente
             if (count($foto) > 0) {
                 for ($i = 0; $i < count($foto); $i++) {
@@ -36,7 +35,7 @@ class Produto{
                     $stmt->bindValue(':n', $foto_nome);
                     $stmt->bindValue(':p', $id_produto);
                     echo "imagem inserida: $foto_nome";
-                    return $stmt->execute();
+                    $stmt->execute();
                 }
             }
         }else{
