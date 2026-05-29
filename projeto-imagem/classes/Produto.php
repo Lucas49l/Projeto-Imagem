@@ -3,7 +3,7 @@ class Produto{
     private $pdo;
 
     public function __construct() {
-        $dns = "mysql:host=localhost;dbname=db_formulario_produtos";
+        $dns = "mysql:host=localhost;dbname=loja";
         $user = "root";
         $pass = "";
         try {
@@ -15,17 +15,17 @@ class Produto{
     }
 
     public function enviarProduto ($nome, $descricao, $foto = array()) {
-        $sql = 'INSER INTO produto (nome, descricao) VALUES (:n, :d)';
+        $sql = 'INSERT INTO produto (nome, descricao) VALUES (:n, :d)';
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue(':n', $nome);
         $stmt->bindValue(':d', $descricao);
 
-        $result = $stmt->excute();
+        $result = $stmt->execute();
+
         if ($result) {
-            // lastInsertId() busca o último id inserido na tabela
             $id_produto = $this->pdo->lastInsertId();
-            //return $id_produto;
+            echo "$id_produto"; // lastInsertId() busca o último id inserido na tabela
         //inserir imagens na tabela com o id do produto inserido anteriormente
             if (count($foto) > 0) {
                 for ($i = 0; $i < count($foto); $i++) {
@@ -35,9 +35,12 @@ class Produto{
 
                     $stmt->bindValue(':n', $foto_nome);
                     $stmt->bindValue(':p', $id_produto);
+                    echo "imagem inserida: $foto_nome";
                     return $stmt->execute();
                 }
             }
+        }else{
+            echo "Erro ao cadastrar produto";
         }
     }
 
